@@ -82,6 +82,15 @@ class UserService {
   async fetchCurrentUser(user) {
     return user;
   }
+  async deleteUserById(id) {
+    try {
+        const deletedUser = await this.userRepository.deleteById(id);
+        return deletedUser;
+    } catch (error) {
+        throw new Error(`Error deleting user: ${error.message}`);
+    }
+}
+
 }
 
 export default UserService;

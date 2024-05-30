@@ -83,3 +83,18 @@ export const resendOtp = async (req, res, next) => {
       next(error);
   }
 };
+
+export const deleteUserWithPharmacy = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const deletedUser = await userService.deleteUserById(userId);
+    res.status(200).json({
+      type: "success",
+      message: "User and associated pharmacy details deleted successfully",
+      data: deletedUser,
+    });
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    next(error);
+  }
+};

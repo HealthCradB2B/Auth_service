@@ -16,9 +16,26 @@ const userSchema = new Schema(
     phoneOtp: {
       type: String,
     },
+    isBlocked: {
+      type: Boolean,
+      default: false,
+    },
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
+
+userSchema.pre("remove", async function (next) {
+  try {
+    await Pharmacy.deleteMany({ userId: this._id });
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 
 const User = model("User", userSchema);
 export default User;

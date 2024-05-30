@@ -34,6 +34,13 @@ class UserRepository {
             throw new Error(`Error saving user: ${error.message}`);
         }
     }
+    async deleteById(id) {
+        try {
+            return await User.findByIdAndDelete(id);
+        } catch (error) {
+            throw new Error(`Error deleting user: ${error.message}`);
+        }
+    }
 }
 
 export default UserRepository;
