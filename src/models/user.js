@@ -1,5 +1,6 @@
 import { model, Schema } from "mongoose";
 
+
 const userSchema = new Schema(
   {
     name: {
@@ -12,13 +13,6 @@ const userSchema = new Schema(
       required: true,
       trim: true,
       unique: true,
-    },
-    phoneOtp: {
-      type: String,
-    },
-    isBlocked: {
-      type: Boolean,
-      default: false,
     },
     isAdmin: {
       type: Boolean,

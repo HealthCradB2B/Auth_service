@@ -1,18 +1,26 @@
+import Pharmacy from "../models/verifyPharmacy.js";
 import PharmacyService from "../services/verifyPharmacy-service.js";
+
 
 const pharmacyService = new PharmacyService();
 
 export const updatePharmacyDetails = async (req, res, next) => {
   try {
-    console.log("Received request to update pharmacy details:", req.body);
-    const userId = req.user._id; // assuming user ID is stored in req.user
-    const updatedPharmacy = await pharmacyService.updatePharmacyDetails(userId, req.body);
-    console.log("Pharmacy details updated successfully:", updatedPharmacy);
-    res.status(200).json({
-      type: "success",
-      message: "Pharmacy details updated successfully, awaiting approval",
-      data: updatedPharmacy,
-    });
+    const { userId, ...updateData } = req.body;
+
+    // Check if the pharmacy record exists
+    const pharmacy = await Pharmacy.findOne({ userId });
+
+    if (!pharmacy) {
+      return res.status(404).json({ message: 'Pharmacy details not found' });
+    }
+
+    // Update the pharmacy record with the new details
+    Object.assign(pharmacy, updateData);
+    await pharmacy.save();
+
+    console.log("Pharmacy details updated successfully:", pharmacy);
+    res.status(200).json({ message: 'Pharmacy details updated successfully', data: pharmacy });
   } catch (error) {
     console.error("Error updating pharmacy details:", error);
     next(error);

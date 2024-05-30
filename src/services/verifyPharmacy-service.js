@@ -5,6 +5,13 @@ class PharmacyService {
     this.pharmacyRepository = new PharmacyRepository();
   }
 
+  async createNewPharmacy(pharmacyData) {
+    try {
+      return await pharmacyRepository.createPharmacy(pharmacyData);
+    } catch (error) {
+      throw error;
+    }
+  }
   async updatePharmacyDetails(userId, data) {
     const pharmacy = await this.pharmacyRepository.findById(userId);
     if (!pharmacy) {

@@ -1,17 +1,27 @@
 import UserService from "../services/user-service.js";
+import PharmacyService from "../services/verifyPharmacy-service.js";
 
 const userService = new UserService();
+const pharmacyService = new PharmacyService();
 
 export const registerUser = async (req, res, next) => {
   try {
     console.log("Received request to register user:", req.body);
     const user = await userService.createNewUser(req.body);
+
+    // Create pharmacy details after creating the user
+    const pharmacyData = {
+      userId: user._id
+      // Add other pharmacy details here
+    };
+    const pharmacy = await pharmacyService.createNewPharmacy(pharmacyData);
+
     await userService.sendOTP(user.phone);
     console.log("User registered successfully:", user);
     res.status(200).json({
       type: "success",
       message: "Account created, OTP sent to mobile number",
-      data: { userId: user._id },
+      data: { userId: user._id, pharmacyId: pharmacy._id }, // Return pharmacyId in response
     });
   } catch (error) {
     console.error("Error registering user:", error);

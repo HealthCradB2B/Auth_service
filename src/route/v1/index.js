@@ -8,8 +8,8 @@ import {
   resendOtp,
   deleteUserWithPharmacy
 } from "../../controller/user-controller.js";
-import { updatePharmacyDetails, getPharmacyDetails, getAllPendingRequests, approvePharmacyDetails } from '../../controllers/verifyPharmacy-controller.js';
-import { authenticateUser, authenticateAdmin } from '../middleware/checkAdmin.js';
+import { updatePharmacyDetails, getPharmacyDetails, getAllPendingRequests, approvePharmacyDetails } from '../../controller/verifyPharmacy-controller.js';
+import checkAdmin from '../../middleware/checkAdmin.js';
 
 
 const router = express.Router();
@@ -21,9 +21,9 @@ router.get("/me", checkAuth, fetchCurrentUser);
 router.post('/resend-otp', resendOtp);
 router.delete("/:userId", checkAuth, checkAdmin, deleteUserWithPharmacy);
 
-router.put('/update-pharmacy-details', authenticateUser, updatePharmacyDetails);
-router.get('/pharmacy-details', authenticateUser, getPharmacyDetails);
-router.get('/admin/pending-requests', authenticateAdmin, getAllPendingRequests);
-router.put('/admin/approve-pharmacy/:id', authenticateAdmin, approvePharmacyDetails);
+router.put('/update-pharmacy-details', checkAuth, updatePharmacyDetails);
+router.get('/pharmacy-details', checkAuth, getPharmacyDetails);
+router.get('/admin/pending-requests', checkAdmin, getAllPendingRequests);
+router.put('/admin/approve-pharmacy/:id', checkAdmin, approvePharmacyDetails);
 
 export default router;
