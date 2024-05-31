@@ -9,14 +9,13 @@ export const registerUser = async (req, res, next) => {
     console.log("Received request to register user:", req.body);
     const user = await userService.createNewUser(req.body);
 
-    // Create pharmacy details after creating the user
     const pharmacyData = {
-      userId: user._id
+      userId: user._id,
       // Add other pharmacy details here
     };
     const pharmacy = await pharmacyService.createNewPharmacy(pharmacyData);
-
     await userService.sendOTP(user.phone);
+    
     console.log("User registered successfully:", user);
     res.status(200).json({
       type: "success",

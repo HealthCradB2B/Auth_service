@@ -1,14 +1,15 @@
 import Pharmacy from "../models/verifyPharmacy.js";
 
 class PharmacyRepository {
-    async create(data) {
+    async createPharmacy(pharmacyData) {
         try {
-            const pharmacy = new Pharmacy(data);
-            return await pharmacy.save();
+          const pharmacy = new Pharmacy(pharmacyData);
+          await pharmacy.save();
+          return pharmacy;
         } catch (error) {
-            throw new Error(`Error creating pharmacy: ${error.message}`);
+          throw error;
         }
-    }
+      }
 
     async findById(id) {
         try {

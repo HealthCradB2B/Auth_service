@@ -2,9 +2,14 @@ import { model, Schema } from "mongoose";
 
 const pharmacySchema = new Schema(
   {
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      required: true,
+    },
     shopName: {
       type: String,
-      required: true,
+      // required: true,
       trim: true,
     },
     secondaryContactNumber: {

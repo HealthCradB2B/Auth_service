@@ -7,7 +7,7 @@ class PharmacyService {
 
   async createNewPharmacy(pharmacyData) {
     try {
-      return await pharmacyRepository.createPharmacy(pharmacyData);
+      return await this.pharmacyRepository.createPharmacy(pharmacyData);
     } catch (error) {
       throw error;
     }
