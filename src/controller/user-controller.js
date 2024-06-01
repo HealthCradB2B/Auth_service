@@ -1,8 +1,11 @@
 import UserService from "../services/user-service.js";
 import PharmacyService from "../services/verifyPharmacy-service.js";
+import UserRepository from "../repository/user-repository.js";
+import jwt from "jsonwebtoken";
 
 const userService = new UserService();
 const pharmacyService = new PharmacyService();
+const userRepository = new UserRepository();
 
 export const registerUser = async (req, res, next) => {
   try {
@@ -43,6 +46,31 @@ export const loginUser = async (req, res, next) => {
     next(error);
   }
 };
+
+export const loginAdmin = async (req, res) => {
+  const { phone } = req.body;
+
+  try {
+    const user = await userRepository.findByPhone(phone);
+    console.log(user.isAdmin)
+
+    if (!user || !user.isAdmin) {
+      return res.status(401).json({ type: 'error', message: 'Login failed' });
+    }
+
+    const token = jwt.sign(
+      { isAdmin: user.isAdmin, userId: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+    
+    res.status(200).json({ type: 'success', token });
+  } catch (error) {
+    console.error(error); // Log the error for debugging
+    res.status(500).json({ type: 'error', message: 'Login failed' });
+  }
+};
+
 
 export const verifyOTP = async (req, res, next) => {
   try {

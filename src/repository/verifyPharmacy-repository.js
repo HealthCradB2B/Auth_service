@@ -19,9 +19,19 @@ class PharmacyRepository {
         }
     }
 
+    // async updateById(id, data) {
+    //     try {
+    //         return await Pharmacy.findByIdAndUpdate(id, { ...data, status: 'pending' }, { new: true });
+    //     } catch (error) {
+    //         throw new Error(`Error updating pharmacy: ${error.message}`);
+    //     }
+    // }
     async updateById(id, data) {
         try {
-            return await Pharmacy.findByIdAndUpdate(id, { ...data, status: 'pending' }, { new: true });
+            const { status = 'pending', ...rest } = data;
+            const updatedPharmacy = await Pharmacy.findByIdAndUpdate(id, { ...rest, status }, { new: true });
+            await updatedPharmacy.save(); // Save the updated document
+            return updatedPharmacy;
         } catch (error) {
             throw new Error(`Error updating pharmacy: ${error.message}`);
         }

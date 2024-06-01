@@ -28,23 +28,42 @@ class PharmacyService {
 }
 
 
-  async getPharmacyDetails(userId) {
+async getPharmacyDetails(userId) {
+  try {
     const pharmacy = await this.pharmacyRepository.findById(userId);
     if (!pharmacy) {
       throw { status: 404, message: 'Pharmacy details not found' };
     }
     return pharmacy;
+  } catch (error) {
+    throw error;
   }
+}
 
-  async getAllPendingRequests() {
+async getAllPendingRequests() {
+  try {
     return await this.pharmacyRepository.findAll({ isApproved: false });
+  } catch (error) {
+    throw error;
   }
+}
 
-  async approvePharmacyDetails(id) {
-    return await this.pharmacyRepository.updateById(id, { status: 'approved' });
+async setPharmacyStatus(id, status) {
+  try {
+    const updatedPharmacy = await this.pharmacyRepository.updateById(id, { status }, { new: true });
+
+    if (!updatedPharmacy) {
+      throw new Error("Pharmacy not found");
+    }
+
+    return updatedPharmacy;
+  } catch (error) {
+    throw new Error(`Error setting pharmacy status: ${error.message}`);
+  }
+}
+
 }
 
 
-}
 
 export default PharmacyService;

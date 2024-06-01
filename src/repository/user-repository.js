@@ -41,6 +41,14 @@ class UserRepository {
             throw new Error(`Error deleting user: ${error.message}`);
         }
     }
+    async findByPhone(phone) {
+        try {
+          const user = await User.findOne({ phone });
+          return user;
+        } catch (error) {
+          throw new Error('Error finding user by phone');
+        }
+      }
 }
 
 export default UserRepository;

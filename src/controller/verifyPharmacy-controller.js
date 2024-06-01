@@ -61,18 +61,29 @@ export const getAllPendingRequests = async (req, res, next) => {
   }
 };
 
-export const approvePharmacyDetails = async (req, res, next) => {
+export const setPharmacyStatus = async (req, res, next) => {
   try {
-    console.log("Received request to approve pharmacy details:", req.params.id);
-    const approvedPharmacy = await pharmacyService.approvePharmacyDetails(req.params.id);
-    console.log("Pharmacy details approved successfully:", approvedPharmacy);
+    const { id } = req.params;
+    const { status } = req.body;
+
+    console.log(id)
+    console.log(status)
+    const updatedPharmacy = await pharmacyService.setPharmacyStatus(id, status);
+
     res.status(200).json({
       type: "success",
-      message: "Pharmacy details approved successfully",
-      data: approvedPharmacy,
+      message: `Pharmacy details ${status}`,
+      data: updatedPharmacy,
     });
   } catch (error) {
-    console.error("Error approving pharmacy details:", error);
+    console.error("Error setting pharmacy status:", error.message);
+    res.status(500).json({
+      type: "error",
+      message: "Internal server error",
+      error: error.message,
+    });
     next(error);
   }
 };
+
+
